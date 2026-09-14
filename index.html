@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="nn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#081018">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Anita 2:10">
+  <meta name="description" content="Anita sitt trenings- og matprogram fram mot halvmaraton på 2:10.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>Anita mot 2:10</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero-topline">
+        <span class="eyebrow">HALVMARATON · 3. NOVEMBER 2026</span>
+        <span id="save-status" class="save-status">✓ Lagra lokalt</span>
+      </div>
+      <h1>Anita mot <span>2:10</span></h1>
+      <p class="hero-copy">Sju målretta treningsveker, løpsstyrke og mat for overskot.</p>
+
+      <div class="hero-metrics">
+        <div><small>Målfart</small><strong>6:10/km</strong></div>
+        <div><small>Personleg rekord</small><strong>2:15</strong></div>
+        <div><small>Garmin no</small><strong id="hero-garmin">2:19</strong></div>
+      </div>
+
+      <div class="race-progress" aria-label="Tid fram til løpet">
+        <div class="race-progress-line"><span id="countdown-label">50 dagar att</span><span>21,1 km</span></div>
+        <div class="bar"><div id="countdown-bar"></div></div>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Hovudmeny">
+      <button class="tab active" data-tab="today"><span>●</span>I dag</button>
+      <button class="tab" data-tab="training"><span>◫</span>Økter</button>
+      <button class="tab" data-tab="progress"><span>↗</span>Framgang</button>
+      <button class="tab" data-tab="food"><span>◇</span>Mat</button>
+      <button class="tab" data-tab="shop"><span>✓</span>Handle</button>
+    </nav>
+
+    <main>
+      <section id="today" class="panel active" aria-label="I dag"></section>
+      <section id="training" class="panel" aria-label="Treningsøkter"></section>
+      <section id="progress" class="panel" aria-label="Framgang og Garmin"></section>
+      <section id="food" class="panel" aria-label="Matplan"></section>
+      <section id="shop" class="panel" aria-label="Handleliste"></section>
+    </main>
+
+    <footer>
+      <p>Planen gir eit estimat, ikkje ein garanti. Ved sjukdom eller smerte: prioriter kvile og juster økta.</p>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
