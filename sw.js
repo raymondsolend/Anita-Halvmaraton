@@ -1,4 +1,4 @@
-var CACHE_NAME = "anita-210-v1";
+var CACHE_NAME = "anita-210-v2";
 var APP_SHELL = [
   "./",
   "./index.html",
@@ -6,7 +6,9 @@ var APP_SHELL = [
   "./data.js",
   "./app.js",
   "./manifest.webmanifest",
-  "./icon.svg"
+  "./icon.svg",
+  "./icon-180.png",
+  "./icon-512.png"
 ];
 
 self.addEventListener("install", function (event) {
