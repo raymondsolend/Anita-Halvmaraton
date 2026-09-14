@@ -1,0 +1,20 @@
+{
+  "name": "Anita mot 2:10",
+  "short_name": "Anita 2:10",
+  "description": "Trening, mat og Garmin-framgang fram mot halvmaraton.",
+  "lang": "nn",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#081018",
+  "theme_color": "#081018",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
