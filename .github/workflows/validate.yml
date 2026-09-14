@@ -20,6 +20,7 @@ jobs:
           node --check data.js
           node --check app.js
           node --check sw.js
+          node tests/smoke.js
 
       - name: Validate manifest
         run: python -m json.tool manifest.webmanifest > /dev/null
