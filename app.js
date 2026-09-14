@@ -890,7 +890,11 @@
   }
 
   function normalizeHeader(value) {
-    return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+    var mapped = String(value || "").toLowerCase()
+      .replace(/æ/g, "ae")
+      .replace(/ø/g, "o")
+      .replace(/å/g, "a");
+    return mapped.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
   }
 
   function detectDelimiter(text) {
@@ -959,8 +963,18 @@
     var text = String(value || "").trim();
     var match = text.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
     if (match) return match[1] + "-" + match[2].padStart(2, "0") + "-" + match[3].padStart(2, "0");
-    match = text.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
-    if (match) return match[3] + "-" + match[2].padStart(2, "0") + "-" + match[1].padStart(2, "0");
+    match = text.match(/(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})/);
+    if (match) {
+      var first = Number(match[1]);
+      var second = Number(match[2]);
+      var day = first;
+      var month = second;
+      if (second > 12 && first <= 12) {
+        month = first;
+        day = second;
+      }
+      return match[3] + "-" + String(month).padStart(2, "0") + "-" + String(day).padStart(2, "0");
+    }
     var parsed = new Date(text);
     if (!Number.isNaN(parsed.getTime())) {
       return parsed.getFullYear() + "-" + String(parsed.getMonth() + 1).padStart(2, "0") + "-" + String(parsed.getDate()).padStart(2, "0");
