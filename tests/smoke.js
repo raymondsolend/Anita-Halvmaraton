@@ -21,7 +21,7 @@ global.window = {
   clearTimeout: clearTimeout,
   scrollTo: function () {}
 };
-global.navigator = {};
+Object.defineProperty(globalThis, "navigator", { value: {}, configurable: true });
 global.localStorage = {
   getItem: function () { return null; },
   setItem: function () {}
