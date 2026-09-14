@@ -10,11 +10,12 @@ Mobilvennleg PWA med treningsplan, matplan, handleliste og lokal Garmin-import f
 - Fire løpeøkter per full treningsveke
 - Ei løpsretta styrkeøkt per veke
 - Mat for trening, restitusjon og løpsførebuing
+- Redigerbare måltid med lokal estimering av kcal og protein frå teksten
 - Varer som kan kjøpast hos Coop Extra eller Kiwi
 
 ## Personvern og lagring
 
-All avhuking, redigering, treningslogg og Garmin-data blir lagra lokalt på eininga. CSV-filer blir lesne i nettlesaren og blir ikkje lasta opp til ein server. Ingen Garmin-passord eller OpenAI API-nøklar blir brukt.
+All avhuking, redigering, treningslogg og Garmin-data blir lagra lokalt på eininga. CSV-filer og måltidstekst blir behandla i nettlesaren og blir ikkje lasta opp til ein server. Ingen Garmin-passord eller OpenAI API-nøklar blir brukt.
 
 ## Garmin
 

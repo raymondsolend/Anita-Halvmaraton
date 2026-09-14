@@ -54,6 +54,40 @@ setTimeout(function () {
   if (elements.food.innerHTML.indexOf("Mat for best mogleg framgang") < 0) {
     throw new Error("Matplanen manglar");
   }
+  if (elements.food.innerHTML.indexOf("Estimer frå tekst") < 0) {
+    throw new Error("Måltidsestimatoren manglar");
+  }
+
+  var breakfast = window.Anita.estimateFoodText("70 g havregryn + 2,5 dl mjølk + 1 banan");
+  if (!breakfast || breakfast.kcal !== 479 || breakfast.protein !== 19 || breakfast.hits !== 3) {
+    throw new Error("Måltidsestimatoren gav feil resultat for mengder");
+  }
+
+  var countedMeal = window.Anita.estimateFoodText("3 egg + 2 grove skiver");
+  if (!countedMeal || countedMeal.kcal !== 414 || countedMeal.protein !== 28 || countedMeal.hits !== 2) {
+    throw new Error("Måltidsestimatoren gav feil resultat for stykk og skiver");
+  }
+
+  document.getElementById("estimate-test-text").value = "70 g havregryn + 2,5 dl mjølk + 1 banan";
+  window.Anita.estimateMeal("estimate-test");
+  if (document.getElementById("estimate-test-kcal").value !== 479 || document.getElementById("estimate-test-protein").value !== 19) {
+    throw new Error("Estimatet vart ikkje fylt inn i måltidsredigeringa");
+  }
+
+  if (window.Anita.estimateFoodText("noko heilt ukjent") !== null) {
+    throw new Error("Ukjend mat skal ikkje få eit vilkårleg estimat");
+  }
+
+  window.ANITA_DATA.meals.forEach(function (day) {
+    day.meals.forEach(function (meal) {
+      if (!window.Anita.estimateFoodText(meal.text)) throw new Error("Ingen estimat for standardmåltid: " + meal.text);
+    });
+  });
+  Object.keys(window.ANITA_DATA.raceMeals).forEach(function (date) {
+    window.ANITA_DATA.raceMeals[date].meals.forEach(function (meal) {
+      if (!window.Anita.estimateFoodText(meal.text)) throw new Error("Ingen estimat for løpsmåltid: " + meal.text);
+    });
+  });
 
   console.log("PWA smoke test passed");
 }, 50);

@@ -13,8 +13,177 @@
   var DAY_MS = 86400000;
   var toastTimer;
 
+  var FOOD_RULES = [
+    { aliases: ["kyllingbagett"], mode: "each", kcalEach: 500, proteinEach: 30, defaultCount: 1 },
+    { aliases: ["sjokolademjolk", "sjokolademelk"], mode: "volume", kcal100: 65, protein100: 3.4, defaultAmount: 300 },
+    { aliases: ["yoghurtdressing"], mode: "weight", kcal100: 80, protein100: 4, defaultAmount: 30 },
+    { aliases: ["tomatsaus", "pastasaus"], mode: "weight", kcal100: 45, protein100: 1.5, defaultAmount: 100 },
+    { aliases: ["makrell i tomat"], mode: "weight", kcal100: 200, protein100: 13, defaultAmount: 100 },
+    { aliases: ["cottage cheese", "hytteost"], mode: "weight", kcal100: 92, protein100: 13, defaultAmount: 150 },
+    { aliases: ["skyr"], mode: "weight", kcal100: 63, protein100: 10, defaultAmount: 160 },
+    { aliases: ["yoghurt", "yogurt"], mode: "weight", kcal100: 72, protein100: 6, defaultAmount: 150 },
+    { aliases: ["havregraut", "havregrot", "havregryn", "havre"], mode: "weight", kcal100: 370, protein100: 13, defaultAmount: 60 },
+    { aliases: ["musli", "granola"], mode: "weight", kcal100: 380, protein100: 10, defaultAmount: 30 },
+    { aliases: ["lettmjolk", "lettmelk", "mjolk", "melk"], mode: "volume", kcal100: 46, protein100: 3.5, defaultAmount: 200 },
+    { aliases: ["egg", "omelett"], mode: "each", units: ["egg"], kcalEach: 78, proteinEach: 6.8, defaultCount: 1 },
+    { aliases: ["banan", "bananar"], mode: "each", units: ["banan", "bananar"], kcalEach: 105, proteinEach: 1.3, defaultCount: 1 },
+    { aliases: ["eple"], mode: "each", units: ["eple"], kcalEach: 80, proteinEach: 0.4, defaultCount: 1 },
+    { aliases: ["appelsin"], mode: "each", units: ["appelsin"], kcalEach: 65, proteinEach: 1.2, defaultCount: 1 },
+    { aliases: ["frukt"], mode: "each", units: ["frukt"], kcalEach: 80, proteinEach: 0.5, defaultCount: 1 },
+    { aliases: ["baer"], mode: "weight", kcal100: 50, protein100: 1, defaultAmount: 100 },
+    { aliases: ["kyllingfilet", "kyllingwok", "kylling"], mode: "weight", kcal100: 110, protein100: 23, defaultAmount: 150 },
+    { aliases: ["karbonadedeig", "kjottdeig"], mode: "weight", kcal100: 125, protein100: 21, defaultAmount: 150 },
+    { aliases: ["laks"], mode: "weight", kcal100: 208, protein100: 20, defaultAmount: 160 },
+    { aliases: ["tunfisksalat", "tunfisk"], mode: "weight", kcal100: 110, protein100: 24, defaultAmount: 150 },
+    { aliases: ["kalkunpalegg", "kalkun", "skinke"], mode: "weight", kcal100: 105, protein100: 19, defaultAmount: 60 },
+    { aliases: ["parmesan"], mode: "weight", kcal100: 430, protein100: 38, defaultAmount: 15 },
+    { aliases: ["lettost", "ost"], mode: "weight", kcal100: 330, protein100: 27, defaultAmount: 30 },
+    { aliases: ["risbolle", "ris"], mode: "weight", kcal100: 350, protein100: 7, defaultAmount: 70 },
+    { aliases: ["pasta"], mode: "weight", kcal100: 350, protein100: 12, defaultAmount: 80 },
+    { aliases: ["poteter", "potet"], mode: "weight", kcal100: 77, protein100: 2, defaultAmount: 400 },
+    { aliases: ["knekkebrod"], mode: "each", units: ["knekkebrod"], kcalEach: 42, proteinEach: 1.3, defaultCount: 2 },
+    { aliases: ["brodskiver", "brodskive", "skiver", "skive", "lyst brod", "grovt brod"], mode: "each", units: ["brodskiver", "brodskive", "skiver", "skive"], kcalEach: 90, proteinEach: 3.6, defaultCount: 2 },
+    { aliases: ["fullkornswrap", "tortillas", "tortilla", "wrap"], mode: "each", units: ["fullkornswrap", "tortillas", "tortilla", "wrap"], kcalEach: 200, proteinEach: 6, defaultCount: 1 },
+    { aliases: ["syltetoy"], mode: "weight", kcal100: 240, protein100: 0.5, defaultAmount: 30 },
+    { aliases: ["honning"], mode: "weight", kcal100: 320, protein100: 0.3, defaultAmount: 15 },
+    { aliases: ["notter"], mode: "weight", kcal100: 600, protein100: 20, defaultAmount: 20 },
+    { aliases: ["gronsaker", "gronnsaker", "brokkoli", "gulrot", "salat", "tomat", "agurk"], mode: "weight", kcal100: 35, protein100: 2, defaultAmount: 150 },
+    { aliases: ["salsa"], mode: "weight", kcal100: 35, protein100: 1.5, defaultAmount: 50 },
+    { aliases: ["dressing", "saus"], mode: "weight", kcal100: 80, protein100: 1, defaultAmount: 50 },
+    { aliases: ["sportsdrikk"], mode: "volume", kcal100: 24, protein100: 0, defaultAmount: 500 },
+    { aliases: ["energigel", "gel"], mode: "each", units: ["energigel", "gel"], kcalEach: 100, proteinEach: 0, defaultCount: 1 },
+    { aliases: ["energibar"], mode: "each", units: ["energibar"], kcalEach: 200, proteinEach: 4, defaultCount: 1 },
+    { aliases: ["proteinkjelde", "protein"], mode: "each", kcalEach: 180, proteinEach: 32, defaultCount: 1 }
+  ];
+
   function copy(value) {
     return JSON.parse(JSON.stringify(value));
+  }
+
+  function normalizeFoodText(value) {
+    var normalized = String(value || "").toLowerCase()
+      .replace(/(\d),(\d)/g, "$1.$2")
+      .replace(/[–—]/g, "-")
+      .replace(/æ/g, "ae")
+      .replace(/ø/g, "o")
+      .replace(/å/g, "a");
+    return normalized.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function searchableFoodText(value) {
+    var normalized = normalizeFoodText(value).replace(/(\d)\.(\d)/g, "$1zzdotzz$2");
+    return normalized.replace(/[^a-z0-9]+/g, " ").replace(/zzdotzz/g, ".").replace(/\s+/g, " ").trim();
+  }
+
+  function hasFoodAlias(segment, aliases) {
+    var text = " " + searchableFoodText(segment) + " ";
+    return aliases.some(function (alias) {
+      return text.indexOf(" " + alias + " ") >= 0;
+    });
+  }
+
+  function averageFoodRange(first, second) {
+    return (Number(first) + Number(second)) / 2;
+  }
+
+  function extractWeight(segment) {
+    var range = segment.match(/(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*(kg|g|gram)\b/);
+    if (range) return averageFoodRange(range[1], range[2]) * (range[3] === "kg" ? 1000 : 1);
+    var amount = segment.match(/(\d+(?:\.\d+)?)\s*(kg|g|gram)\b/);
+    if (!amount) return null;
+    return Number(amount[1]) * (amount[2] === "kg" ? 1000 : 1);
+  }
+
+  function extractVolume(segment) {
+    var range = segment.match(/(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*(ml|cl|dl|l)\b/);
+    var amount = range ? averageFoodRange(range[1], range[2]) : null;
+    var unit = range ? range[3] : null;
+    if (!range) {
+      var single = segment.match(/(\d+(?:\.\d+)?)\s*(ml|cl|dl|l)\b/);
+      if (single) {
+        amount = Number(single[1]);
+        unit = single[2];
+      }
+    }
+    if (amount !== null) {
+      if (unit === "l") return amount * 1000;
+      if (unit === "dl") return amount * 100;
+      if (unit === "cl") return amount * 10;
+      return amount;
+    }
+
+    var glasses = searchableFoodText(segment).match(/(\d+(?:\.\d+)?)\s*(?:glas|glass)\b/);
+    if (glasses) return Number(glasses[1]) * 250;
+    if (/\b(?:eit|eitt|ett|ein|en)\s+(?:glas|glass)\b/.test(searchableFoodText(segment))) return 250;
+    return null;
+  }
+
+  function extractPackageCount(segment) {
+    var text = searchableFoodText(segment);
+    var count = text.match(/(\d+(?:\.\d+)?)\s*(?:beger|boks(?:ar|er)?|pakke(?:r)?|pose(?:r)?)\b/);
+    if (count) return Number(count[1]);
+    if (/\bhalv(?:t)?\s+(?:beger|boks|pakke|pose)\b/.test(text)) return 0.5;
+    return 1;
+  }
+
+  function escapeFoodPattern(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function extractFoodCount(segment, rule) {
+    var text = searchableFoodText(segment);
+    var units = (rule.units || rule.aliases).map(escapeFoodPattern).join("|");
+    var adjectives = "(?:(?:sma|liten|lite|stor|store|grov|grove|lys|lyse|heil|heile|hel|hele)\\s+){0,3}";
+    var count = text.match(new RegExp("(\\d+(?:\\.\\d+)?)\\s*(?:stk\\.?\\s*)?" + adjectives + "(?:" + units + ")\\b"));
+    if (count) return Number(count[1]);
+    var half = new RegExp("\\b(?:(?:ein|ei|eitt|en|et)\\s+)?halv(?:t)?\\s+" + adjectives + "(?:" + units + ")\\b");
+    if (half.test(text)) return 0.5;
+    return rule.defaultCount || 1;
+  }
+
+  function estimateFoodText(text) {
+    var normalized = normalizeFoodText(text);
+    var segments = normalized
+      .replace(/\b(?:og|med)\b/g, "+")
+      .split(/\s*(?:\+|,|;)\s*/)
+      .map(function (segment) { return segment.trim(); })
+      .filter(Boolean);
+    var kcal = 0;
+    var protein = 0;
+    var hits = 0;
+
+    segments.forEach(function (segment) {
+      var rule = FOOD_RULES.find(function (candidate) {
+        return hasFoodAlias(segment, candidate.aliases);
+      });
+      if (!rule) return;
+
+      if ((hasFoodAlias(segment, ["sportsdrikk", "gel", "energigel"])) && /\bkarbohydrat\b/.test(searchableFoodText(segment))) {
+        var carbRange = segment.match(/(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*g\s*karbohydrat/);
+        if (carbRange) {
+          kcal += averageFoodRange(carbRange[1], carbRange[2]) * 4;
+          hits += 1;
+          return;
+        }
+      }
+
+      if (rule.mode === "each") {
+        var count = extractFoodCount(segment, rule);
+        kcal += count * rule.kcalEach;
+        protein += count * rule.proteinEach;
+        hits += 1;
+        return;
+      }
+
+      var amount = rule.mode === "volume" ? extractVolume(segment) : extractWeight(segment);
+      if (amount === null) amount = rule.defaultAmount * extractPackageCount(segment);
+      kcal += amount * rule.kcal100 / 100;
+      protein += amount * rule.protein100 / 100;
+      hits += 1;
+    });
+
+    if (!hits) return null;
+    return { kcal: Math.round(kcal), protein: Math.round(protein), hits: hits };
   }
 
   function todayISO() {
@@ -412,7 +581,11 @@
             "<label class='field'>Kcal<input id='" + editorId + "-kcal' type='number' min='0' value='" + esc(meal.kcal) + "'></label>" +
             "<label class='field'>Protein (g)<input id='" + editorId + "-protein' type='number' min='0' value='" + esc(meal.protein) + "'></label>" +
           "</div>" +
-          "<button class='btn green' onclick=\"Anita.saveMeal('" + kind + "','" + key + "'," + index + ",'" + editorId + "')\">Lagre måltid</button>" +
+          "<div class='editor-actions'>" +
+            "<button type='button' class='btn' onclick=\"Anita.estimateMeal('" + editorId + "')\">Estimer frå tekst</button>" +
+            "<button type='button' class='btn green' onclick=\"Anita.saveMeal('" + kind + "','" + key + "'," + index + ",'" + editorId + "')\">Lagre måltid</button>" +
+          "</div>" +
+          "<p class='tiny estimate-note'>Estimatet er omtrentleg. Skriv gjerne mengder, til dømes «70 g havregryn + 2,5 dl mjølk + 1 banan». Bruk pakken for best presisjon.</p>" +
         "</div>";
     }
 
@@ -839,6 +1012,23 @@
     notify("Resultatet er fjerna");
   }
 
+  function estimateMeal(editorId) {
+    var textInput = document.getElementById(editorId + "-text");
+    var kcalInput = document.getElementById(editorId + "-kcal");
+    var proteinInput = document.getElementById(editorId + "-protein");
+    if (!textInput || !kcalInput || !proteinInput) return;
+
+    var estimate = estimateFoodText(textInput.value);
+    if (!estimate) {
+      notify("Eg kjenner ikkje att maten. Skriv matvare og mengde, eller fyll inn frå pakken.");
+      return;
+    }
+
+    kcalInput.value = estimate.kcal;
+    proteinInput.value = estimate.protein;
+    notify("Estimat fylt inn frå " + estimate.hits + (estimate.hits === 1 ? " matvare" : " matvarer"));
+  }
+
   function saveMeal(kind, key, index, editorId) {
     var plan = kind === "race" ? state.raceMeals[key] : state.meals[Number(key)];
     if (!plan || !plan.meals[index]) return;
@@ -1154,6 +1344,8 @@
     saveWorkout: saveWorkout,
     saveResult: saveResult,
     clearResult: clearResult,
+    estimateMeal: estimateMeal,
+    estimateFoodText: estimateFoodText,
     saveMeal: saveMeal,
     addPrediction: addPrediction,
     removePrediction: removePrediction,

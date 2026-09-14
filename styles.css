@@ -365,6 +365,9 @@ textarea { min-height: 105px; resize: vertical; line-height: 1.45; }
 
 .editor.open { display: block; }
 .editor .btn { margin-top: 10px; }
+.editor-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.editor-actions .btn { flex: 1 1 155px; }
+.estimate-note { margin: 9px 1px 0; }
 
 .meal {
   display: grid;

@@ -1,4 +1,4 @@
-var CACHE_NAME = "anita-210-v3";
+var CACHE_NAME = "anita-210-v4";
 var APP_SHELL = [
   "./",
   "./index.html",
