@@ -490,7 +490,7 @@
     }).join("");
 
     document.getElementById("training").innerHTML =
-      "<div class='card accent'><h2>Plan fram mot 2:10</h2><p class='lead'>Fire løpeøkter i kvar full veke: éi kvalitetsøkt, to rolege turar og éin langtur. Styrken er lagd slik at han støttar løpinga.</p><div class='notice'>Rolige økter skal vera rolege. Det er nøkkelen til å tåla målfartsarbeidet og møta løpet med overskot.</div></div>" +
+      "<div class='card accent'><h2>Plan fram mot 2:10</h2><p class='lead'>Fire løpeøkter i kvar full veke: éi kvalitetsøkt, to rolege turar og éin langtur. Styrken er lagd slik at han støttar løpinga.</p><div class='notice'>Rolige økter skal vera rolege. Planen føreset at ho toler fire løpeøkter og rundt 30 km per veke. Dersom mengda nyleg har vore lågare, kort ned måndags- og fredagsøkta med 10 minutt dei to første vekene. Ikkje ta att ei mista økt.</div></div>" +
       zones + weeks;
   }
 
